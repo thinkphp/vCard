@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Create your own vCard</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+  <link rel="stylesheet" href="http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css" type="text/css">
+  <style> html,body { background: #444;font-family:"Lucida Grande",Helvetica,Arial,Sans-serif;}
+  #doc2 { background: #fff;border: 1px solid #fff;margin-top: 10px;width: 70%;}
+  #bd {background: #FFF3E4; margin: 3px} 
+  .vcard{padding: 10px;margin: 30px}  
+  table td{padding: 2px}
+  table th{font-weight: bold}
+  h1 { background: #FFC071; padding:.5em; font-size: 200%; margin: 3px; font-weight: bold; text-align: left;padding-left: 25px}
+  #submit {border: 1px solid #ECC728;background: #ECC728;padding: 5px;margin-top: 10px;font-size: 12px;border-radius: 10px;-moz-border-radius: 10px;-webkit-border-radius: 10px;color: #fff;font-weight: bold;}
+  #submit:hover{background: #CEA909;}
+  #ft { margin-top: 2em; color:#999; font-size: 90%;padding: 4px}
+  #ft a{color:#666;}
+  input {border: 1px solid #888;font-size: 17px}
+  .error {border: 1px solid #AD3939;font-family: tahoma;padding: 14px;background: #AD3939;width: 260px;border-radius: 10px;-moz-border-radius: 10px;-webkit-border-radius: 10px}
+  .errorField {color: #c00;padding: 2px;margin: 0px;font-weight: bold;font-size: 12px;background: #fff}
+  h2 {color: #fff;font-size: 15px;font-weight: bold;text-align: center} </style>
+<script type="text/javascript">
+DOMhelp={addEvent:function(elem,evType,fn,useCapture){if(elem.addEventListener){elem.addEventListener(evType,fn,useCapture);}else if(elem.attachEvent){var r=elem.attachEvent('on'+evType,fn);return r;}else{elem['on'+evType]=fn;}},cancelClick:function(e){if(window.event){window.event.cancelBubble=true;window.event.returnValue=false;}if(e&&e.stopPropagation&&e.preventDefault){e.stopPropagation();e.preventDefault();}}};validationRules={'first_name':{'pattern':/^([a-zA-Z]+){2}$/i,'error':'Invalid name. Only letters are allowed'},'last_name':{'pattern':/^([a-zA-Z]+){2}$/i,'error':'Invalid name. Only letters are allowed'},'company':{'pattern':/.{2}/i,'error':'Enter a company that has at least 2 chars'},'title':{'pattern':/^([a-zA-Z\s]+){2}$/,'error':'Only letters are allowed'},'work_city':{'pattern':/^([a-zA-Z]+){2}$/,'error':'Enter your work city'},'url':{'pattern':/^(http:\/\/www\.|https:\/\/www\.|ftp:\/\/www\.|www\.){1}([\w]+\.)([\w]+){1,2}$/,'error':'This is not valid URL (ex: http://www.site.com)'},'email1':{'pattern':/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,'error':'This is not valid address email'},'cell_tel':{'pattern':/^([0-9]+){10}$/,'error':'Enter your mobile tel 9 digit (xyzxxxxxxx) '}};csv={errors:[],errorClass:'error',errorFieldClass:'errorField',errorMessage:null,errorTitle:'Please Correct The Red Fields!',sendButtonID:'submit',init:function(){if(!document.getElementById||!document.getElementsByTagName){return;}csv.submitbutton=document.getElementById(csv.sendButtonID);if(!csv.submitbutton){return;}csv.form=document.getElementsByTagName('form')[0];if(!csv.form){return;}DOMhelp.addEvent(csv.form,'submit',csv.send,false);},send:function(e){csv.flushErrors();for(var i in validationRules){if(!document.getElementById(i)){continue;}csv.checkValue(i);}if(csv.errors.length>0){csv.errorMessage=document.createElement('div');csv.errorMessage.className=csv.errorClass;var errorTitle=document.createElement('h2');errorTitle.appendChild(document.createTextNode(csv.errorTitle));csv.errorMessage.appendChild(errorTitle);csv.submitbutton.parentNode.insertBefore(csv.errorMessage,csv.submitbutton);DOMhelp.cancelClick(e);}},checkValue:function(o){var elem=document.getElementById(o);switch(elem.type){case'text':if(!validationRules[o]['pattern'].test(elem.value)){csv.errors.push(validationRules[o]['error']);csv.addErrorMsg(elem,validationRules[o]['error']);}break;}},flushErrors:function(){csv.errors=[];if(csv.errorMessage){csv.errorMessage.parentNode.removeChild(csv.errorMessage);csv.errorMessage=null;}for(var i in validationRules){var elem=document.getElementById(i);if(!elem){continue;}if(elem.parentNode.nextSibling.childNodes[1]&&elem.parentNode.nextSibling.childNodes[1].nodeName.toLowerCase()=='span'&&elem.parentNode.nextSibling.childNodes[1].className==csv.errorFieldClass){elem.parentNode.nextSibling.childNodes[1].parentNode.removeChild(elem.parentNode.nextSibling.childNodes[0].nextSibling);}}},addErrorMsg:function(o,msg){var span=document.createElement('span');span.appendChild(document.createTextNode(msg));span.className=csv.errorFieldClass;o.parentNode.nextSibling.childNodes[0].parentNode.insertBefore(span,o.parentNode.nextSibling.childNodes[0].nextSibling);}};DOMhelp.addEvent(window,'load',csv.init,false);
+</script>
+</head>
+<body>
+
+ <div id="doc2">
+
+  <div id="hd"><h1>Create your Own vCard</h1></div>
+
+    <div id="bd">
+
+      <table class="vcard" cellpadding="10" cellspacing="10" border="0">
+
+        <form action="vcard.php" method="post">
+
+         <tr><th>First Name</th><td><input type="text" name="first_name" id="first_name" size="30"/></td><td><div></div></td></tr>
+
+         <tr><th>Last Name</th><td><input type="text" name="last_name" id="last_name" size="30" /></td><td><div></div></td></tr>
+
+         <tr><th>Company</th><td><input type="text" name="company" id="company" size="30" /></td><td><div></div></td></tr>
+
+         <tr><th>Title</th><td><input type="text" name="title" id="title" size="30" /></td><td><div></div></td></tr>
+
+         <tr><th>Street</th><td><input type="text" name="work_address" id="work_address" size="30" /><td><div></div></td></tr>
+
+         <tr><th>City</th><td><input type="text" name="work_city" id="work_city" size="20" /></td><td><div></div></td></tr>
+
+         <tr><th>Email Address</th><td><input type="text" name="email1" id="email1" size="30"/></td><td><div></div></td></tr>
+
+         <tr><th>Web Page</th><td><input type="text" name="url" id="url" /></td><td><div></div></td></tr>
+
+         <tr><th>Office Phone</th><td><input type="text" name="office_tel" id="office_tel" /></td><td><div></div></td></tr>
+
+         <tr><th>Mobile Phone</th><td><input type="text" name="cell_tel" id="cell_tel" /></td><td><div></div></td></tr>
+
+         <tr><th></th><td><input type="submit" name="submit" id="submit" value="Create vCard" /></td><td><div></div></td></tr>
+
+       </form>
+
+      </table>
+
+   </div><!-- end bd -->
+
+   <div id="ft">Written by <a href="http://thinkphp.ro">Adrian Statescu</a>. Powered by YUI</div>
+
+ <div/><!-- end doc -->
+
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Create your own vCard</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+  <link rel="stylesheet" href="http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css" type="text/css">
+  <style>
+
+  html,body { 
+  
+     background: #444;
+     font-family:"Lucida Grande",Helvetica,Arial,Sans-serif;
+
+  }
+ 
+  #doc2 {
+
+        background: #fff;
+        border: 1px solid #fff;
+        margin-top: 10px;
+        width: 70%;
+  }
+
+  #bd {background: #FFF3E4; margin: 3px} 
+
+  .vcard{padding: 10px;margin: 30px}
+  
+  table td{padding: 2px}
+
+  table th{font-weight: bold}
+
+  h1 { background: #FFC071; padding:.5em; font-size: 200%; margin: 3px; font-weight: bold; text-align: left;padding-left: 25px}
+
+  #submit {border: 1px solid #ECC728;background: #ECC728;padding: 5px;margin-top: 10px;font-size: 12px;border-radius: 10px;-moz-border-radius: 10px;-webkit-border-radius: 10px;color: #fff;font-weight: bold}
+
+  #submit:hover{background: #CEA909;}
+
+  #ft { margin-top: 2em; color:#999; font-size: 90%;padding: 4px}
+
+  #ft a{color:#666;}
+
+  input {border: 1px solid #888;font-size: 17px}
+
+  .error {border: 1px solid #c00;padding: 14px;background:#fff}
+
+  h2 {color: #c00;font-size: 20px}  
+
+  .error ul li {list-style: square;margin: 10px;color: #c00}
+   
+  </style>
+  <script type="text/javascript">
+
+  DOMhelp = {
+
+            addEvent: function(elem,evType,fn,useCapture) {
+
+                      if(elem.addEventListener) {
+
+                              elem.addEventListener(evType,fn,useCapture);
+
+                      } else if(elem.attachEvent) {
+
+                              var r = elem.attachEvent('on'+evType,fn);
+
+                              return r;
+
+                      } else {
+
+                             elem['on'+evType] = fn;
+                      }
+            },
+
+            cancelClick: function(e) {
+
+                     if(window.event) {
+
+                             window.event.cancelBubble = true;
+
+                             window.event.returnValue = false;
+                     }
+
+                     if(e && e.stopPropagation && e.preventDefault) {
+
+                             e.stopPropagation();
+
+                             e.preventDefault();
+                     }
+            }
+  }; 
+
+  validationRules = {
+
+           'first_name': {
+
+                   'pattern': /.{5}/i,
+
+                   'error': 'Please enter a name that has at least 5 characters' 
+            },
+
+            'last_name': {
+
+                   'pattern': /.{5}/i, 
+
+                   'error': 'Please enter last name that has at least 5 characters'
+            },
+
+            'company': {
+
+                   'pattern': /.{4}/i, 
+
+                   'error': 'Please enter a company that has at least 4 characters'
+            } 
+  };
+
+
+  csv = {
+
+        //array of errors
+        errors: [],
+
+        //class`error
+        errorClass: 'error',
+
+        //place of error
+        errorMessage: null,
+
+        //title error
+        errorTitle: 'Please fix the following problems:',
+
+        //submit id
+        sendButtonID: 'submit',
+
+         
+        //init object
+        init: function() {
+
+              if(!document.getElementById || !document.getElementsByTagName) {return;}
+
+              csv.submitbutton = document.getElementById(csv.sendButtonID);
+
+              if(!csv.submitbutton) {return;}
+
+              csv.form = document.getElementsByTagName('form')[0];
+
+              if(!csv.form) {return;}
+
+              DOMhelp.addEvent(csv.form,'submit',csv.send,false);
+        },
+
+        send: function(e) {
+ 
+              csv.flushErrors();
+
+              for(var i in validationRules) {
+
+                      if(!document.getElementById(i)) {continue;}
+
+                      csv.checkValue(i);
+              }
+             
+              if(csv.errors.length > 0) {
+
+                     csv.errorMessage = document.createElement('div');
+
+                     csv.errorMessage.className = csv.errorClass;
+
+                     var errorTitle = document.createElement('h2');
+
+                     errorTitle.appendChild(document.createTextNode(csv.errorTitle));
+
+                     csv.errorMessage.appendChild(errorTitle);
+
+                     var ul = document.createElement('ul');
+
+                     csv.errorMessage.appendChild(ul);
+
+                     for(var i=0;i<csv.errors.length;i++) {
+
+                             var li = document.createElement('li');
+
+                             li.appendChild(document.createTextNode(csv.errors[i]));
+
+                             csv.errorMessage.getElementsByTagName('ul')[0].appendChild(li);
+                     }                            
+
+                     csv.submitbutton.parentNode.insertBefore(csv.errorMessage,csv.submitbutton); 
+
+                DOMhelp.cancelClick(e);           
+              }    
+
+        },
+
+        checkValue: function(o) {
+
+              var elem = document.getElementById(o);
+
+                  switch(elem.type) {
+
+                        case 'text': 
+ 
+                        if(!validationRules[o]['pattern'].test(elem.value)) {
+
+                            csv.errors.push(validationRules[o]['error']);
+                        }
+
+                        break; 
+                  }
+        },
+
+        flushErrors: function() {
+
+              csv.errors = [];
+
+              if(csv.errorMessage) {
+
+                     csv.errorMessage.parentNode.removeChild(csv.errorMessage);
+
+                     csv.errorMessage = null; 
+              }  
+
+        }    
+  };
+
+  DOMhelp.addEvent(window,'load',csv.init,false);
+
+  </script>
+</head>
+<body>
+
+ <div id="doc2">
+
+  <div id="hd"><h1>Create your Own vCard</h1></div>
+
+    <div id="bd">
+
+      <table class="vcard" cellpadding="10" cellspacing="10" border="0">
+
+        <form action="vcard.php" method="post">
+
+         <tr><th>First Name</th><td><input type="text" name="first_name" id="first_name" size="30"></td></tr>
+
+         <tr><th>Last Name</th><td><input type="text" name="last_name" id="last_name" size="30"></td></tr>
+
+         <tr><th>Company</th><td><input type="text" name="company" id="company" size="30"></td></tr>
+
+         <tr><th>Title</th><td><input type="text" name="title" id="title" size="30"></td></tr>
+
+         <tr><th>Street</th><td><input type="text" name="work_address" id="work_address" size="30"></td></tr>
+
+         <tr><th>City</th><td><input type="text" name="work_city" id="work_city" size="20"></td></tr>
+
+         <tr><th>Email Address</th><td><input type="text" name="email1" id="email1" size="30"></td></tr>
+
+         <tr><th>Web Page</th><td><input type="text" name="url" id="url"></td></tr>
+
+         <tr><th>Office Phone</th><td><input type="text" name="office_tel" id="office_tel"></td></tr>
+
+         <tr><th>Mobile Phone</th><td><input type="text" name="cell_tel" id="cell_tel"></td></tr>
+
+         <tr><th></th><td><input type="submit" name="submit" id="submit" value="Create vCard"></td></tr>
+
+       </form>
+
+      </table>
+
+   </div><!-- end bd -->
+
+   <div id="ft">Written by <a href="http://thinkphp.ro">Adrian Statescu</a>. Powered by YUI</div>
+
+ <div/><!-- end doc -->
+
+</body>
+</html>
